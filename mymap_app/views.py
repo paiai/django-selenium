@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect
 
 import os
@@ -7,9 +7,7 @@ import urllib.request
 import json
 
 def index(request):
-    print(request)
-    result = naver_map_api()
-    return HttpResponse(result)
+    return render(request, 'mymap_app/index.html')
 
 def index_int(request, id):
     result = id
