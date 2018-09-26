@@ -102,3 +102,5 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+django_project_selenium/secrets.json
+.DS_Store

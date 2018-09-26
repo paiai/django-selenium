@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect
+from django.conf import settings
 
 import os
 import sys
@@ -24,9 +25,8 @@ def lat_lon(request, addr):
     return HttpResponse(str(lat) + ' ' + str(lon))
 
 def naver_map_api(addr):
-    #result = parse_data()
-    client_id = "jB9SkOPjDvXA9frPLhTg"
-    client_secret = "hGuFZRLjhj"
+    client_id = settings.NAVER_CLIENT_ID
+    client_secret = settings.NAVER_CLIENT_SECRET
     encText = urllib.parse.quote(addr)
     url = "https://openapi.naver.com/v1/map/geocode?query=" + encText # json 결과
     # url = "https://openapi.naver.com/v1/map/geocode.xml?query=" + encText # xml 결과
@@ -38,8 +38,6 @@ def naver_map_api(addr):
     if(rescode==200):
         response_body = response.read()
         result = response_body.decode('utf-8')
-        #print(response_body.decode('utf-8'))
     else:
         result = "Error Code:" + rescode
-        #print("Error Code:" + rescode)
     return result
