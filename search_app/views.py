@@ -16,9 +16,10 @@ def index(request):
     context = {}
     if request.method == 'GET':
         if 'query' in request.GET:
-            data = get_address(request.GET['query'])
+            query = request.GET['query']
+            data = get_search_result(query)
 
-            context = {'data': data}
+            context = {'data': data, 'query': query, 'client_id': settings.NAVER_CLIENT_ID}
             
             # result = search_place_naver(data['addr'])
             # json_data = json.loads(result)
@@ -33,7 +34,7 @@ def index(request):
 
     return render(request, 'search_app/index.html', context)
 
-def get_address(query):
+def get_search_result(query):
     options = webdriver.ChromeOptions()
     options.add_argument('headless')
     options.add_argument('window-size=1920x1080')
@@ -84,3 +85,27 @@ def search_place_naver(query):
     else:
         result = "Error Code:" + rescode
     return result
+
+def place(request):
+    print("tesdfsdfsdf")
+    print(request)
+    return HttpResponse("qqq")
+# def search_place_naver(query):
+#     print(query)
+#     client_id = settings.NAVER_CLIENT_ID
+#     client_secret = settings.NAVER_CLIENT_SECRET
+#     encText = urllib.parse.quote(query) # 불정로 6 -> 주소 입력
+#     url = "https://openapi.naver.com/v1/map/geocode?query=" + encText # json 결과
+#     #url = "https://openapi.naver.com/v1/search/local?query=" + encText # json 결과
+#     request = urllib.request.Request(url)
+#     request.add_header("X-Naver-Client-Id",client_id)
+#     request.add_header("X-Naver-Client-Secret",client_secret)
+#     response = urllib.request.urlopen(request)
+#     rescode = response.getcode()
+
+#     if(rescode==200):
+#         response_body = response.read()
+#         result = response_body.decode('utf-8')
+#     else:
+#         result = "Error Code:" + rescode
+#     return result

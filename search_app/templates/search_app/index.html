@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId={{ client_id }}&submodules=geocoder"></script>
     <title>Document</title>
 </head>
 <body>
@@ -19,40 +21,58 @@
     </form>
 
     <div class="container">
-        <h2>Hover Rows</h2>
-        <p>The .table-hover class enables a hover state on table rows:</p>            
+        {% if data %}
+        <h2>"{{ query }}" 검색결과 </h2>         
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>name</th>
-                    <th>address</th>
-                    <th>tel</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Tel</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 {% for item in data %}
                 <tr>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.addr }}</td>
-                    <td>{{ item.tel }}</td>
-                    <td><button type="button" onclick="selectItem();">선택</button></td>
+                    <td class="item_name">{{ item.name }}</td>
+                    <td class="item_addr">{{ item.addr }}</td>
+                    <td class="item_tel">{{ item.tel }}</td>
+                    <td><button type="button" onclick="selectItem('{{ forloop.counter0 }}', '{{ item.addr }}');">선택</button></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% endif %}
     </div>
-
-
-
 
     <script>
         function initSearch() {
             location.replace("http://127.0.0.1:8000/");
         }
 
-        function selectItem() {
-            console.log(this)
+        function selectItem(idx, address) {
+            console.log(idx)
+
+            var sel_address = address;  // 도로명 주소나 지번 주소만 가능 (건물명 불가!!!!)
+            naver.maps.Service.geocode({address: sel_address}, function(status, response) {
+                console.log(response)
+                if (status !== naver.maps.Service.Status.OK) {
+                    return alert(sel_address + '의 검색 결과가 없거나 기타 네트워크 에러');
+                }
+                var result = response.result;
+                var lat = result.items[0].point.x;
+                var lon = result.items[0].point.y;
+                // 검색 결과 갯수: result.total
+                // 첫번째 결과 결과 주소: result.items[0].address
+                // 첫번째 검색 결과 좌표: result.items[0].point.y, result.items[0].point.x
+                //var myaddr = new naver.maps.Point(result.items[0].point.x, result.items[0].point.y);
+
+                $.post( "./place", { data: "result"})
+                .done(function( data ) {
+                    alert( "Data Loaded: " + data );
+                });
+            });
         }
     </script>  
 </body>
