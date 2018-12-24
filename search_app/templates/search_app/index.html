@@ -52,8 +52,6 @@
         }
 
         function selectItem(idx, address) {
-            console.log(idx)
-
             var sel_address = address;  // 도로명 주소나 지번 주소만 가능 (건물명 불가!!!!)
             naver.maps.Service.geocode({address: sel_address}, function(status, response) {
                 console.log(response)
@@ -67,10 +65,11 @@
                 // 첫번째 결과 결과 주소: result.items[0].address
                 // 첫번째 검색 결과 좌표: result.items[0].point.y, result.items[0].point.x
                 //var myaddr = new naver.maps.Point(result.items[0].point.x, result.items[0].point.y);
-
-                $.post( "./place", { data: "result"})
+                
+                var data = {address: address, lat: lat, lon: lon}
+                $.post( "./place", { data: data})
                 .done(function( data ) {
-                    alert( "Data Loaded: " + data );
+                    //alert( "Data Loaded: " + data );
                 });
             });
         }

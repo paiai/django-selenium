@@ -6,6 +6,10 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 
+from django.views.decorators.csrf import csrf_exempt
+
+from .models import *
+
 import os
 import sys
 import urllib.request
@@ -86,10 +90,23 @@ def search_place_naver(query):
         result = "Error Code:" + rescode
     return result
 
+
+@csrf_exempt
 def place(request):
-    print("tesdfsdfsdf")
-    print(request)
+    print(request.POST)
+
+    query = 'test'
+    addr = request.POST['address']
+    lat = request.POST['lat']
+    lon = request.POST['lon']
+    tel = ''
+
+  #  place = Place(cate=1, name=query, address=addr, lat=lat, lon=lon, tel=tel)
+  #  place.save()
+
     return HttpResponse("qqq")
+
+    
 # def search_place_naver(query):
 #     print(query)
 #     client_id = settings.NAVER_CLIENT_ID
